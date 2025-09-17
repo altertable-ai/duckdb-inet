@@ -66,6 +66,15 @@ static void LoadInternal(ExtensionLoader &loader) {
   add_fun.SetFallible();
   loader.AddFunctionOverload(add_fun);
 
+  // Add IP range functions
+  loader.RegisterFunction(
+      ScalarFunction("subnet_contained_by_or_equals", {inet_type, inet_type},
+                                                       LogicalType::BOOLEAN,
+                                                       INetFunctions::ContainsLeft));
+  loader.RegisterFunction(
+      ScalarFunction("subnet_contains_or_equals", {inet_type, inet_type},
+                                                   LogicalType::BOOLEAN,
+                                                   INetFunctions::ContainsRight));
   // Add IP range operators
   loader.RegisterFunction(ScalarFunction("<<=", {inet_type, inet_type},
                                                  LogicalType::BOOLEAN,
