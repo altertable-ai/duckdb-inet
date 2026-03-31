@@ -182,14 +182,17 @@ static INET_TYPE AddImplementation(INET_TYPE ip, hugeint_t val) {
   // Use the overflow checking operators to ensure well-defined behavior. The
   // operators must operate on the same type signedness, so convert the operand
   // as necessary, and choose between add/subtraction operations.
+  auto to_uhugeint = [](hugeint_t v) {
+    return uhugeint_t(static_cast<uint64_t>(v.upper), v.lower);
+  };
   if (val > 0) {
     address_out =
         AddOperatorOverflowCheck::Operation<uhugeint_t, uhugeint_t, uhugeint_t>(
-            address_in, val);
+            address_in, to_uhugeint(val));
   } else {
     address_out =
         SubtractOperatorOverflowCheck::Operation<uhugeint_t, uhugeint_t,
-                                                 uhugeint_t>(address_in, -val);
+                                                 uhugeint_t>(address_in, to_uhugeint(-val));
   }
 
   if (addr_type == IPAddressType::IP_ADDRESS_V4 &&
